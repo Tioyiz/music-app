@@ -1,0 +1,139 @@
+import { useState, useEffect, useRef } from "react"
+import { songs } from "../songs.js"
+
+export function useMusic() {
+  const [allsongs, setallsongs] = useState(() => {
+    const local = JSON.parse(localStorage.getItem("allsongs"))
+
+    return local ? local : songs
+  })
+
+  const [currentSong, setCurrentSong] = useState(allsongs[0])
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [value, setValue] = useState(0)
+  const [duration, setDuration] = useState(0)
+  const audio = useRef()
+
+  const [file, setfile] = useState(null)
+
+  function uploadFile(e) {
+    setfile(e.target.files[0])
+  }
+
+  useEffect(() => localStorage.setItem("allsongs", JSON.stringify(allsongs)))
+
+  useEffect(() => {
+    if (!file) return
+
+    const src = URL.createObjectURL(file)
+    const text = file.name.split("-")
+    const [songName, artist] = text
+    const artista = artist.split("(")[0]
+
+    const newSong = {
+      id: allsongs.slice(-1)[0].id + 1,
+      src,
+      artista,
+      songName,
+      img: ""
+    }
+
+    setallsongs((prev) => [...prev, newSong])
+
+    localStorage.setItem("allsongs", JSON.stringify(newSong))
+  }, [file])
+
+  function changeSongState() {
+    setIsPlaying(!isPlaying)
+  }
+
+  function handleChange(e) {
+    audio.current.currentTime = e.target.value
+  }
+
+  function backSong() {
+    const indexSong = (currentSong.id - 2 + allsongs.length) % allsongs.length
+    setCurrentSong(allsongs[indexSong])
+    setIsPlaying(true)
+  }
+
+  function nextSong() {
+    const indexSong = currentSong.id % allsongs.length
+    setCurrentSong(allsongs[indexSong])
+    setIsPlaying(true)
+  }
+
+  function formatTime(time) {
+    if (time == null) return "00:00"
+    const seg = Math.floor(time % 60)
+    const min = Math.floor(time / 60)
+    return `${min}:${seg.toString().padStart(2, 0)}`
+  }
+
+  function showModal() {
+    const dialog = document.querySelector("#dialog")
+    dialog.showModal()
+  }
+
+  function closeModal() {
+    const dialog = document.querySelector("#dialog")
+    dialog.close()
+  }
+
+  function playMusic(id) {
+    const newSong = allsongs.find((song) => song.id == id)
+    setCurrentSong(newSong)
+    setIsPlaying(true)
+    closeModal()
+  }
+
+  useEffect(() => {
+    if (isPlaying) {
+      audio.current.play()
+    } else {
+      audio.current.pause()
+    }
+  }, [isPlaying, currentSong])
+
+  useEffect(() => {
+    function TimeUpdate() {
+      setValue(audio.current.currentTime)
+    }
+
+    function Duration() {
+      setDuration(audio.current.duration)
+    }
+
+    audio.current.addEventListener("timeupdate", TimeUpdate)
+
+    audio.current.addEventListener("loadedmetadata", Duration)
+
+    audio.current.addEventListener("ended", nextSong)
+
+    return () => {
+      audio.current.removeEventListener("timeupdate", TimeUpdate)
+
+      audio.current.removeEventListener("loadedmetadata", Duration)
+
+      audio.current.removeEventListener("ended", nextSong)
+    }
+  }, [currentSong])
+
+  return {
+    audio,
+    currentSong,
+    duration,
+    value,
+    formatTime,
+    handleChange,
+    isPlaying,
+    changeSongState,
+    nextSong,
+    backSong,
+    uploadFile,
+    showModal,
+    allsongs,
+    closeModal,
+    playMusic
+  }
+}
