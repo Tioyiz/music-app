@@ -96,26 +96,27 @@ export function useMusic() {
   }, [isPlaying, currentSong])
 
   useEffect(() => {
+    const audioElement = audio.current
     function TimeUpdate() {
-      setValue(audio.current.currentTime)
+      setValue(audioElement.currentTime)
     }
 
     function Duration() {
-      setDuration(audio.current.duration)
+      setDuration(audioElement.duration)
     }
 
-    audio.current.addEventListener("timeupdate", TimeUpdate)
+    audioElement.addEventListener("timeupdate", TimeUpdate)
 
-    audio.current.addEventListener("loadedmetadata", Duration)
+    audioElement.addEventListener("loadedmetadata", Duration)
 
-    audio.current.addEventListener("ended", nextSong)
+    audioElement.addEventListener("ended", nextSong)
 
     return () => {
-      audio.current.removeEventListener("timeupdate", TimeUpdate)
+      audioElement.removeEventListener("timeupdate", TimeUpdate)
 
-      audio.current.removeEventListener("loadedmetadata", Duration)
+      audioElement.removeEventListener("loadedmetadata", Duration)
 
-      audio.current.removeEventListener("ended", nextSong)
+      audioElement.removeEventListener("ended", nextSong)
     }
   }, [currentSong])
 

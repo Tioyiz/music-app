@@ -81,7 +81,7 @@ export function Heart() {
         width="24"
         height="24"
         viewBox="0 0 24 24"
-        fill="none"
+        fill="#fff"
         stroke="currentColor"
         className="icon icon-tabler icons-tabler-outline icon-tabler-heart"
       >
@@ -100,7 +100,8 @@ export function Letra() {
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
+      stroke="#fff"
+      strokeWidth={2}
       className="icon icon-tabler icons-tabler-outline icon-tabler-upload"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -120,7 +121,7 @@ export function ListSongs({ showModal }) {
         height="24"
         viewBox="0 0 24 24"
         fill="#fff "
-        stroke="currentColor"
+        stroke="#fff"
         className="icon icon-tabler icons-tabler-outline icon-tabler-menu-deep"
       >
         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -139,7 +140,7 @@ export function Songmenu() {
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      fill="none"
+      fill="#299"
       stroke="currentColor"
       stroke-width="2"
       stroke-linecap="round"

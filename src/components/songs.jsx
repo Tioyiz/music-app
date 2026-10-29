@@ -1,3 +1,5 @@
+import { SongInfo } from "./songInfo"
+
 export function Songs({ allsongs, closeModal, playMusic, currentSong }) {
   return (
     <>

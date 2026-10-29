@@ -55,17 +55,17 @@ function App() {
           </div>
           <div className="opcions">
             <Heart />
-
-            <label htmlFor="file-upload-input">
-              <Letra />
-              <input
-                type="file"
-                id="file-upload-input"
-                onChange={uploadFile}
-                style={{ display: "none" }}
-              />
-            </label>
-
+            <button>
+              <label htmlFor="file-upload-input">
+                <Letra />
+                <input
+                  type="file"
+                  id="file-upload-input"
+                  onChange={uploadFile}
+                  style={{ display: "none" }}
+                />
+              </label>
+            </button>
             <ListSongs showModal={showModal} />
           </div>
         </footer>
