@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { songs } from "../songs.js"
+import { supabase } from "../supabase/supabase.js"
 
 export function useMusic() {
   const [allsongs, setallsongs] = useState(() => {
@@ -20,28 +21,42 @@ export function useMusic() {
     setfile(e.target.files[0])
   }
 
-  useEffect(() => localStorage.setItem("allsongs", JSON.stringify(allsongs)))
+  useEffect(
+    () => async () => {
+      const { data } = await supabase.from("songs").select()
+      console.log(data)
+      localStorage.setItem("allsongs", JSON.stringify(allsongs))
+    },
+    []
+  )
 
-  useEffect(() => {
-    if (!file) return
+  useEffect(
+    () => async () => {
+      if (!file) return
 
-    const src = URL.createObjectURL(file)
-    const text = file.name.split("-")
-    const [songName, artist] = text
-    const artista = artist.split("(")[0]
+      const src = URL.createObjectURL(file)
+      const text = file.name.split("(")
+      const [songName, _] = text
+      //const artist = songName.split("(")[0]
 
-    const newSong = {
-      id: allsongs.slice(-1)[0].id + 1,
-      src,
-      artista,
-      songName,
-      img: ""
-    }
+      const newSong = {
+        id: allsongs.slice(-1)[0].id + 1,
+        src,
+        artist: songName,
+        songName,
+        img: "../../public/poster.jpeg"
+      }
 
-    setallsongs((prev) => [...prev, newSong])
-
-    localStorage.setItem("allsongs", JSON.stringify(newSong))
-  }, [file])
+      setallsongs((prev) => [...prev, newSong])
+      const { data, error } = await supabase
+        .from("songs")
+        .insert({ user_id: "1", song_info: newSong })
+        .select()
+      //console.log(data)
+      localStorage.setItem("allsongs", JSON.stringify(newSong))
+    },
+    [file]
+  )
 
   function changeSongState() {
     setIsPlaying(!isPlaying)

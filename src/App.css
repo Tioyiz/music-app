@@ -248,7 +248,7 @@ dialog:open {
 .list {
   width: 90%;
   height: auto;
-  margin: 10px 20px;
+  margin: 3px 20px;
   display: flex;
   align-items: center;
   gap: 15px;
@@ -261,14 +261,20 @@ dialog:open {
   }
 
   & .info>h1 {
+    width: 204px;
+    height: 39px;
     color: #eee;
     font-size: 18px;
     font-weight: bold;
+    text-overflow: ellipsis;
   }
 
   & .info>h2 {
+    width: 204px;
+    height: 39px;
     color: #bbb;
     font-size: 14px;
+    text-overflow: ellipsis;
   }
 }
 

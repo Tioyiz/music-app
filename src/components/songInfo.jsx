@@ -4,7 +4,7 @@ export function SongInfo({ song, className, playMusic = () => { } }) {
       <img src={song.img} />
       <div className="info">
         <h1>{song.songName}</h1>
-        <h2>{song.artista}</h2>
+        <h2>{song.artist}</h2>
       </div>
     </section>
   )
